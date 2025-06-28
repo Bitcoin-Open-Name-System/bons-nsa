@@ -6,6 +6,7 @@ import (
 	"github.com/btcsuite/btcd/chaincfg"
 )
 
+// getNetworkParams returns the chain configuration params for the given Bitcoin network.
 func getNetworkParams(network Network) (*chaincfg.Params, error) {
 	switch network {
 	case Mainnet:
