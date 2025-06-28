@@ -19,3 +19,9 @@ func getNetworkParams(network Network) (*chaincfg.Params, error) {
 		return nil, fmt.Errorf("invalid network: %s", network)
 	}
 }
+
+// TODO: this is a frame for test now
+func createTaprootBurnAddress(arbitraryString string, network *chaincfg.Params) (string, string, string, error) {
+	// TODO: this is a dummy return value for test now
+	return "", "", "", fmt.Errorf("not implemented yet")
+}
