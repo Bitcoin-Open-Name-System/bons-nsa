@@ -20,8 +20,9 @@ func getNetworkParams(network Network) (*chaincfg.Params, error) {
 	}
 }
 
-// TODO: this is a frame for test now
+// TODO: this is a frame for test nows
+// createTaprootBurnAddress returns taproot burn address, x only internalkey(encoded to string), output publickey, error
 func createTaprootBurnAddress(arbitraryString string, network *chaincfg.Params) (string, string, string, error) {
 	// TODO: this is a dummy return value for test now
-	return "", "", "", fmt.Errorf("not implemented yet")
+	return "", "", "", fmt.Errorf("not yet")
 }
