@@ -41,7 +41,7 @@ func TestGetNetworkParams(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := getNetworkParams(tt.network)
+			got, err := GetNetworkParams(tt.network)
 			if tt.wantErr {
 				if err == nil {
 					t.Errorf("expected error for network %q, got nil", tt.network)
@@ -94,7 +94,7 @@ func TestCreateTaprootBurnAddress(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			addr, internal, output, err := createTaprootBurnAddress(tt.arbitraryString, tt.network)
+			addr, internal, output, err := CreateTaprootBurnAddress(tt.arbitraryString, tt.network)
 
 			if tt.wantErr && err == nil {
 				t.Errorf("expected error but got nil for %s", tt.name)
