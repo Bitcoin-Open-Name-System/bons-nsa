@@ -10,8 +10,8 @@ import (
 	"github.com/btcsuite/btcd/chaincfg"
 )
 
-// getNetworkParams returns the chain configuration params for the given Bitcoin network.
-func getNetworkParams(network Network) (*chaincfg.Params, error) {
+// GetNetworkParams returns the chain configuration params for the given Bitcoin network.
+func GetNetworkParams(network Network) (*chaincfg.Params, error) {
 	switch network {
 	case Mainnet:
 		return &chaincfg.MainNetParams, nil
@@ -35,7 +35,7 @@ func taggedHash(tag string, data []byte) []byte {
 }
 
 // createTaprootBurnAddress returns taproot burn address, x only internalkey(encoded to string), output publickey, error
-func createTaprootBurnAddress(arbitraryString string, network *chaincfg.Params) (string, string, string, error) {
+func CreateTaprootBurnAddress(arbitraryString string, network *chaincfg.Params) (string, string, string, error) {
 
 	hash := sha256.Sum256([]byte(arbitraryString))
 	internalKeyBytes := hash[:]
