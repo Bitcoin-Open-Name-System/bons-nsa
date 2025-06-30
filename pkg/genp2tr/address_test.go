@@ -1,12 +1,7 @@
 package genp2tr
 
-/**
-You need to get the following packages before runing the test.
-
-- go get github.com/btcsuite/btcd/chaincfg
-*/
-
 import (
+	"strings"
 	"testing"
 
 	"github.com/btcsuite/btcd/chaincfg"
@@ -15,47 +10,47 @@ import (
 func TestGetNetworkParams(t *testing.T) {
 	tests := []struct {
 		name       string
-		input      Network
+		network    Network
 		wantParams *chaincfg.Params
 		wantErr    bool
 	}{
 		{
 			name:       "mainnet case",
-			input:      Mainnet,
+			network:    Mainnet,
 			wantParams: &chaincfg.MainNetParams,
 			wantErr:    false,
 		},
 		{
 			name:       "testnet case",
-			input:      Testnet,
+			network:    Testnet,
 			wantParams: &chaincfg.TestNet3Params,
 			wantErr:    false,
 		},
 		{
 			name:       "regtest case",
-			input:      Regtest,
+			network:    Regtest,
 			wantParams: &chaincfg.RegressionNetParams,
 			wantErr:    false,
 		},
 		{
 			name:    "invalid network",
-			input:   "invalidnet",
+			network: "invalidnet",
 			wantErr: true,
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := getNetworkParams(tt.input)
+			got, err := getNetworkParams(tt.network)
 			if tt.wantErr {
 				if err == nil {
-					t.Errorf("expected error for input %q, got nil", tt.input)
+					t.Errorf("expected error for network %q, got nil", tt.network)
 				}
 				return
 			}
 
 			if err != nil {
-				t.Errorf("unexpected error for input %q: %v", tt.input, err)
+				t.Errorf("unexpected error for network %q: %v", tt.network, err)
 				return
 			}
 
@@ -65,4 +60,56 @@ func TestGetNetworkParams(t *testing.T) {
 		})
 	}
 
+}
+
+func TestCreateTaprootBurnAddress(t *testing.T) {
+	tests := []struct {
+		name            string
+		arbitraryString string
+		network         *chaincfg.Params
+		wantAddrPrefix  string
+		wantErr         bool
+	}{
+		{
+			name:            "valid naminet input with primary seed",
+			arbitraryString: PrimarySeed,
+			network:         &chaincfg.MainNetParams,
+			wantAddrPrefix:  "bc1p",
+			wantErr:         false,
+		},
+		{
+			name:            "valid naminet input with primary seed",
+			arbitraryString: PrimarySeed,
+			network:         &chaincfg.TestNet3Params,
+			wantAddrPrefix:  "tb1p",
+			wantErr:         false,
+		}, {
+			name:            "valid test input with primary seed",
+			arbitraryString: PrimarySeed,
+			network:         &chaincfg.RegressionNetParams,
+			wantAddrPrefix:  "bcrt1p",
+			wantErr:         false,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			addr, internal, output, err := createTaprootBurnAddress(tt.arbitraryString, tt.network)
+
+			if tt.wantErr && err == nil {
+				t.Errorf("expected error but got nil for %s", tt.name)
+			}
+			if !tt.wantErr && err != nil {
+				t.Errorf("unexpected error for %s: %v", tt.name, err)
+			}
+			if !tt.wantErr {
+				if !strings.HasPrefix(addr, tt.wantAddrPrefix) {
+					t.Errorf("expected address prefix %s, got %s", tt.wantAddrPrefix, addr)
+				}
+				if internal == "" || output == "" {
+					t.Errorf("expected non-empty internal/output pubkeys, got internal: %s, output: %s", internal, output)
+				}
+			}
+		})
+	}
 }
